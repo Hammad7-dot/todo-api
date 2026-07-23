@@ -32,20 +32,11 @@ uvicorn main:app --reload --port 8000
 ```bash
 curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"title":"Buy milk"}'
 ```
-{"detail":[{"type":"json_invalid","loc":["body",9],"msg":"JSON decode error","input":{},"ctx":{"error":"Unterminated string starting at"}}]}curl: (3) unmatched close brace/bracket in position 6:
-milk"}
-
-
-
-
-
-
-
-
-
 ```
-HTTP/1.1 201 Created
+HTTP/1.1 422 Unprocessable Content
+date: Thu, 23 Jul 2026 20:25:01 GMT
+server: uvicorn
+content-length: 158
 content-type: application/json
-
-{"id":4,"title":"Buy milk","done":false}
+{"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
 ```
