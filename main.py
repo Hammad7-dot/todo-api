@@ -12,7 +12,6 @@ tasks = [
 
 next_id = 4
 
-
 class NewTask(BaseModel):
     title: str = ""
 
