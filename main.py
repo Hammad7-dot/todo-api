@@ -39,17 +39,11 @@ def get_task(task_id: int):
 def create_task(new_task: NewTask):
     if not new_task.title or not new_task.title.strip():
         raise HTTPException(status_code=400, detail="Title is required")
-
     global next_id
     task = {"id": next_id, "title": new_task.title, "done": False}
     tasks.append(task)
     next_id += 1
     return task
-
-class UpdateTask(BaseModel):
-    title: str = None
-    done: bool = None
-
 
 @app.put("/tasks/{task_id}")
 def update_task(task_id: int, update: UpdateTask):
@@ -63,7 +57,6 @@ def update_task(task_id: int, update: UpdateTask):
                 task["done"] = update.done
             return task
     raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-
 
 @app.delete("/tasks/{task_id}", status_code=204)
 def delete_task(task_id: int):
