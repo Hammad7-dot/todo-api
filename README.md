@@ -32,6 +32,16 @@ uvicorn main:app --reload --port 8000
 ```bash
 curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"title":"Buy milk"}'
 ```
+{"detail":[{"type":"json_invalid","loc":["body",9],"msg":"JSON decode error","input":{},"ctx":{"error":"Unterminated string starting at"}}]}curl: (3) unmatched close brace/bracket in position 6:
+milk"}
+
+
+
+
+
+
+
+
 
 ```
 HTTP/1.1 201 Created
