@@ -33,10 +33,11 @@ uvicorn main:app --reload --port 8000
 curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/json" -d '{"title":"Buy milk"}'
 ```
 ```
-HTTP/1.1 422 Unprocessable Content
-date: Thu, 23 Jul 2026 20:25:01 GMT
+HTTP/1.1 201 Created
+date: Thu, 23 Jul 2026 20:27:51 GMT
 server: uvicorn
-content-length: 158
+content-length: 40
 content-type: application/json
-{"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+{"id":4,"title":"Buy milk","done":false}
 ```
