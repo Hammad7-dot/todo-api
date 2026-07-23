@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import Optional
 
 app = FastAPI()
 
@@ -14,6 +15,11 @@ next_id = 4  # tracks the next free id
 
 class NewTask(BaseModel):
     title: str = ""
+
+
+class UpdateTask(BaseModel):
+    title: Optional[str] = None
+    done: Optional[bool] = None
 
 
 @app.get("/")
