@@ -5,14 +5,6 @@ from database import init_db, get_db
 app = FastAPI()
 init_db()
 
-tasks = [
-    {"id": 1, "title": "Buy milk", "done": False},
-    {"id": 2, "title": "Walk the dog", "done": False},
-    {"id": 3, "title": "Learn FastAPI", "done": True},
-]
-
-next_id = 4
-
 class NewTask(BaseModel):
     title: str = ""
 
