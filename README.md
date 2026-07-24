@@ -35,7 +35,6 @@ uvicorn main:app --reload --port 8000
 '{"title":"Buy milk"}' | Out-File -Encoding utf8 body.json
 curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/json" --data "@body.json"
 ```
-
 ```
 HTTP/1.1 201 Created
 date: Thu, 23 Jul 2026 20:27:51 GMT
