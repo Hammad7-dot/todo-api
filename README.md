@@ -63,3 +63,19 @@ Deleted the completed task; confirmed instantly via `GET /tasks` with no server 
 ## Database Browser screenshot
 
 ![DB Browser](db-browser.png)
+
+## Database — Postgres via Docker
+
+Tasks are now stored in Postgres (was SQLite in A2), running in Docker with a persistent volume.
+
+**Run the whole stack:**
+```bash
+docker compose up
+```
+This starts Postgres and the FastAPI app together, creates the `tasks` table via `init.sql`, and seeds 3 example tasks on first run.
+
+**Architecture:** the Postgres repository replaced the in-memory/SQLite one in `database.py`. The routes in `main.py` did not change — same function signatures, same status codes — proving the storage layer really is swappable without touching the service.
+
+**Environment:** connection string lives in `.env` (gitignored). `.env.example` is committed showing the expected shape.
+
+**Persistence proven:** created a task via POST, ran `docker compose down` then `docker compose up` — the task was still present in `GET /tasks` afterward, confirming the volume preserves data across a full stack restart.
