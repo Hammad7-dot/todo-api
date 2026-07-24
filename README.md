@@ -39,6 +39,35 @@ curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/js
 HTTP/1.1 201 Created
 date: Thu, 23 Jul 2026 20:27:51 GMT
 server: uvicorn
+## Database
+
+Tasks are now stored in SQLite (`tasks.db`) instead of in memory.
+
+**Why SQLite:** single file, zero setup, no separate server to install — and unlike the in-memory version from A1, data now survives a server restart.
+
+**Database file:** `tasks.db`, created automatically on first run. It's git-ignored so each clone starts fresh with 3 seeded example tasks.
+
+**Run it:**
+```bash
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+**Example SQL query (run in DB Browser):**
+```sql
+DELETE FROM tasks WHERE done = 1;
+```
+Deleted the completed task; confirmed instantly via `GET /tasks` with no server restart needed, proving the API and DB Browser read the same file.
+
+## Database Browser screenshot
+
+![DB Browser](db-browser.png)
+
+
+
+
+
+
 content-length: 40
 content-type: application/json
 
