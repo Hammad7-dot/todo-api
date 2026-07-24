@@ -1,19 +1,12 @@
 # Task API
 
-Small CRUD API for a to-do list, built with FastAPI. Tasks are stored in memory — data resets when the server restarts.
+Small CRUD API for a to-do list, built with FastAPI. Tasks are now stored in SQLite — data survives a server restart.
 
 ## Run it
+```bash
 pip install -r requirements.txt
-
 uvicorn main:app --reload --port 8000
-
-## Swagger UI — full CRUD cycle
-
-![Create task](swagger-create.png)
-![List tasks](swagger-list.png)
-![Get single task](swagger-get-one.png)
-![Update task](swagger-update.png)
-![Delete task](swagger-delete.png)
+```
 
 ## Endpoints
 
@@ -29,16 +22,10 @@ uvicorn main:app --reload --port 8000
 
 ## Example request
 
-## Example request
-
-```bash
-## Example request
-
 ```bash
 '{"title":"Buy milk"}' | Out-File -Encoding utf8 body.json
 curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/json" --data "@body.json"
 ```
-
 HTTP/1.1 201 Created
 date: Thu, 23 Jul 2026 20:27:51 GMT
 server: uvicorn
@@ -47,9 +34,17 @@ content-type: application/json
 
 {"id":4,"title":"Buy milk","done":false}
 
+## Swagger UI — full CRUD cycle
+
+![Create task](swagger-create.png)
+![List tasks](swagger-list.png)
+![Get single task](swagger-get-one.png)
+![Update task](swagger-update.png)
+![Delete task](swagger-delete.png)
+
 ## Database
 
-Tasks are now stored in SQLite (`tasks.db`) instead of in memory.
+Tasks are stored in SQLite (`tasks.db`) instead of in memory.
 
 **Why SQLite:** single file, zero setup, no separate server to install — and unlike the in-memory version from A1, data now survives a server restart.
 
