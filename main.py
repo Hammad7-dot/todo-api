@@ -21,6 +21,8 @@ class UpdateTask(BaseModel):
     title: Optional[str] = None
     done: Optional[bool] = None
 
+class TaskCreate(BaseModel):
+    title: str
 
 @app.get("/", summary="API info")
 def root():
@@ -46,15 +48,21 @@ def get_task(task_id: int):
         raise HTTPException(status_code=404, detail="Task not found")
     return dict(row)
 
-@app.post("/tasks", status_code=201, summary="Create a new task")
-def create_task(new_task: NewTask):
-    if not new_task.title or not new_task.title.strip():
+@app.post("/tasks", status_code=201)
+def create_task(task: TaskCreate):
+    if not task.title or not task.title.strip():
         raise HTTPException(status_code=400, detail="Title is required")
-    global next_id
-    task = {"id": next_id, "title": new_task.title, "done": False}
-    tasks.append(task)
-    next_id += 1
-    return task
+
+    conn = get_db()
+    cursor = conn.execute(
+        "INSERT INTO tasks (title, done) VALUES (?, ?)",
+        (task.title, 0)
+    )
+    conn.commit()
+    new_id = cursor.lastrowid
+    row = conn.execute("SELECT * FROM tasks WHERE id = ?", (new_id,)).fetchone()
+    conn.close()
+    return dict(row)
 
 @app.put("/tasks/{task_id}", summary="Update a task's title and/or done status")
 def update_task(task_id: int, update: UpdateTask):
