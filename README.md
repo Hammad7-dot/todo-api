@@ -1,25 +1,35 @@
 # Task API
 
-Small CRUD API for a to-do list, built with FastAPI. Tasks are now stored in SQLite — data survives a server restart.
+Small CRUD API for a to-do list, built with FastAPI. Originally in-memory, then SQLite, now backed by Postgres running in Docker — data survives both app and container restarts.
 
-## Run it
+## Run it (full stack, recommended)
+
+```bash
+docker compose up
+```
+
+This starts Postgres and the FastAPI app together, creates the `tasks` table via `init.sql`, and seeds 3 example tasks on first run. API available at `http://localhost:8000`.
+
+## Run it (app only, local Postgres)
 
 ```bash
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
+Requires a `.env` file with `DATABASE_URL` set (see `.env.example`) and a reachable Postgres instance.
+
 ## Endpoints
 
-| Method | Path          | Meaning                       |
-|--------|---------------|--------------------------------|
-| GET    | /             | API info                      |
-| GET    | /health       | Health check                  |
-| GET    | /tasks        | List all tasks                |
-| GET    | /tasks/{id}   | Get a single task              |
-| POST   | /tasks        | Create a new task              |
-| PUT    | /tasks/{id}   | Update a task's title/done     |
-| DELETE | /tasks/{id}   | Delete a task                  |
+| Method | Path          | Meaning                        |
+|--------|---------------|---------------------------------|
+| GET    | /             | API info                       |
+| GET    | /health       | Health check                   |
+| GET    | /tasks        | List all tasks                 |
+| GET    | /tasks/{id}   | Get a single task               |
+| POST   | /tasks        | Create a new task               |
+| PUT    | /tasks/{id}   | Update a task's title/done      |
+| DELETE | /tasks/{id}   | Delete a task                   |
 
 ## Example request
 
@@ -30,9 +40,6 @@ curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/js
 
 ```
 HTTP/1.1 201 Created
-date: Thu, 23 Jul 2026 20:27:51 GMT
-server: uvicorn
-content-length: 40
 content-type: application/json
 
 {"id":4,"title":"Buy milk","done":false}
@@ -46,36 +53,27 @@ content-type: application/json
 ![Update task](swagger-update.png)
 ![Delete task](swagger-delete.png)
 
-## Database
-
-Tasks are stored in SQLite (`tasks.db`) instead of in memory.
-
-**Why SQLite:** single file, zero setup, no separate server to install — and unlike the in-memory version from A1, data now survives a server restart.
-
-**Database file:** `tasks.db`, created automatically on first run. It's git-ignored so each clone starts fresh with 3 seeded example tasks.
-
-**Example SQL query (run in DB Browser):**
-```sql
-DELETE FROM tasks WHERE done = 1;
-```
-Deleted the completed task; confirmed instantly via `GET /tasks` with no server restart needed, proving the API and DB Browser read the same file.
-
-## Database Browser screenshot
-
-![DB Browser](db-browser.png)
-
 ## Database — Postgres via Docker
 
-Tasks are now stored in Postgres (was SQLite in A2), running in Docker with a persistent volume.
+Tasks are stored in Postgres, running in Docker with a persistent volume (`pgdata`), defined in `docker-compose.yml`.
 
-**Run the whole stack:**
+**Architecture:** the Postgres repository (`database.py`) replaced the earlier in-memory and SQLite versions. The routes in `main.py` did not change — same function signatures, same status codes — proving the storage layer is genuinely swappable without touching the service layer.
+
+**Environment:** the connection string lives in `.env` (git-ignored). `.env.example` is committed showing the expected shape:
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/todo
+```
+Note: inside `docker-compose.yml`, the app connects to the Postgres service using the hostname `db` (Docker's internal networking), not `localhost`.
+
+**Schema:** created via `init.sql`, run automatically by Postgres on first container start. Seeds 3 example tasks only if the table is empty.
+
+**Persistence proven:** created a task via `POST /tasks`, then ran:
 ```bash
+docker compose down
 docker compose up
 ```
-This starts Postgres and the FastAPI app together, creates the `tasks` table via `init.sql`, and seeds 3 example tasks on first run.
+`GET /tasks` afterward still showed the created task — confirming the volume preserves data across a full stack restart, not just an app restart.
 
-**Architecture:** the Postgres repository replaced the in-memory/SQLite one in `database.py`. The routes in `main.py` did not change — same function signatures, same status codes — proving the storage layer really is swappable without touching the service.
+## Database Browser screenshot (SQLite era, kept for history)
 
-**Environment:** connection string lives in `.env` (gitignored). `.env.example` is committed showing the expected shape.
-
-**Persistence proven:** created a task via POST, ran `docker compose down` then `docker compose up` — the task was still present in `GET /tasks` afterward, confirming the volume preserves data across a full stack restart.
+![DB Browser](db-browser.png)
