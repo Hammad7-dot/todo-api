@@ -3,8 +3,6 @@
 Small CRUD API for a to-do list, built with FastAPI. Tasks are now stored in SQLite — data survives a server restart.
 
 ## Run it
-
-```bash
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
@@ -27,13 +25,14 @@ uvicorn main:app --reload --port 8000
 '{"title":"Buy milk"}' | Out-File -Encoding utf8 body.json
 curl.exe -i -X POST http://localhost:8000/tasks -H "Content-Type: application/json" --data "@body.json"
 ```
-## Swagger UI — full CRUD cycle
 
-![Create task](swagger-create.png)
-![List tasks](swagger-list.png)
-![Get single task](swagger-get-one.png)
-![Update task](swagger-update.png)
-![Delete task](swagger-delete.png)
+HTTP/1.1 201 Created
+date: Thu, 23 Jul 2026 20:27:51 GMT
+server: uvicorn
+content-length: 40
+content-type: application/json
+
+{"id":4,"title":"Buy milk","done":false}
 
 ## Database
 
