@@ -1,8 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from database import get_db, get_all_tasks, get_task, create_task, update_task, delete_task
+from routers import auth, public, protected
 
 app = FastAPI()
+
+app.include_router(auth.router)
+app.include_router(public.router)
+app.include_router(protected.router)
 
 class TaskCreate(BaseModel):
     title: str
