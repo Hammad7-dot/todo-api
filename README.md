@@ -169,3 +169,5 @@ _Write your own prompt from memory, generate a second version in
    `get_user` without checking for exceptions/errors?
 3. **What your prompt forgot to specify** — what did the AI silently decide
    for you?
+
+![Auth flow verified](auth-flow-verified.png)
