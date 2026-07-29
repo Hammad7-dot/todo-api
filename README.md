@@ -159,8 +159,8 @@ _Write your own prompt from memory (don't copy this repo), generate a second ver
 
 - [ ] Add a real `403 Forbidden` case for an authenticated-but-not-allowed user, and document the `401` vs `403` difference.
 - [ ] Add a `/auth/refresh` endpoint that exchanges a refresh token for a new access token.
-<<<<<<< HEAD
+   
 - [ ] Rate-limit `POST /auth/login` and return `429` after N failed attempts.
-=======
+
 - [ ] Rate-limit `POST /auth/login` and return `429` after N failed attempts.
->>>>>>> 0056ddb49c60d4720b17190925772adb153da623
+
